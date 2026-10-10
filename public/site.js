@@ -11,7 +11,7 @@ if ("IntersectionObserver" in window) {
 
 async function updateDownloads() {
   try {
-    const response = await fetch("/api/releases");
+    const response = await fetch("/api/releases", { cache: "no-store" });
     if (!response.ok) return;
     const releases = await response.json();
     for (const [app, release] of Object.entries(releases)) {

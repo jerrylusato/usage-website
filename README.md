@@ -43,7 +43,9 @@ source commit, expected package name, SHA-256 digest, size, and owned download U
 Mac manifests must explicitly declare a consistent `signing` / `notarized` pair
 (`ad-hoc` / false or `developer-id` / true); missing or inconsistent status is rejected.
 Packages must include `SHA256SUMS`. GitHub's asset digest is checked when supplied.
-Metadata is cached for five minutes at the edge. The browser only queries this same-origin API.
+Metadata is cached for five minutes at the edge. The browser only queries this same-origin API
+and uses `cache: "no-store"` to bypass its own cache; Cloudflare zone browser TTL settings
+otherwise extend the response lifetime and can retain source links after publication.
 Source-build links remain visible until a valid published package is available, or if GitHub
 is temporarily unavailable. No nonexistent binary download is advertised.
 
