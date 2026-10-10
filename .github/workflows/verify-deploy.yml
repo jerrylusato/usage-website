@@ -40,7 +40,10 @@ jobs:
         run: |
           set -euo pipefail
           npx wrangler versions upload --tag "$GITHUB_SHA"
-          npx wrangler versions deploy --version-tag "$GITHUB_SHA@100%" --yes
+          version_id=$(jq -ser '[.[] | select(.type == "version-upload" and .worker_name == "usage-website")] | if length == 1 then .[0].version_id else error("Expected one uploaded website version") end' "$WRANGLER_OUTPUT_FILE_PATH")
+          [[ "$version_id" =~ ^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$ ]]
+          npx wrangler versions deploy "$version_id@100%" --yes
         env:
+          WRANGLER_OUTPUT_FILE_PATH: ${{ runner.temp }}/uploaded-worker-version.jsonl
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: '07313d620ec2c3009fe37e942d5dd0f8'
