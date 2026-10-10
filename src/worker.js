@@ -14,6 +14,8 @@ export function validateRelease(app, release, manifest) {
   if (!config || release.draft || release.prerelease || !/^v\d+\.\d+\.\d+$/.test(release.tag_name)) return null;
   if (manifest.app !== app || manifest.tag !== release.tag_name || manifest.version !== release.tag_name.slice(1)
     || !Number.isInteger(manifest.build) || manifest.build < 1 || !/^[a-f0-9]{40}$/.test(manifest.commit)) return null;
+  if (app === "mac" && !((manifest.signing === "ad-hoc" && manifest.notarized === false)
+    || (manifest.signing === "developer-id" && manifest.notarized === true))) return null;
   const prefix = `https://github.com/${OWNER}/${config.repository}/releases/download/${release.tag_name}/`;
   const filename = app === "phone" ? `phone-usage-${manifest.version}.apk` : `mac-usage-${manifest.version}-universal.dmg`;
   const packageAsset = release.assets.find(asset => asset.name === filename);
@@ -27,7 +29,8 @@ export function validateRelease(app, release, manifest) {
   return { version: manifest.version, build: manifest.build, tag: manifest.tag,
     download: packageAsset.browser_download_url, checksums: checksumAsset.browser_download_url,
     release: `https://github.com/${OWNER}/${config.repository}/releases/tag/${release.tag_name}`,
-    sha256: file.sha256, size: file.size };
+    sha256: file.sha256, size: file.size,
+    ...(app === "mac" ? { signing: manifest.signing, notarized: manifest.notarized } : {}) };
 }
 
 export async function loadRelease(app, request = fetch) {

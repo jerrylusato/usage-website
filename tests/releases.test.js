@@ -14,6 +14,7 @@ function fixture(app = "phone") {
   ] };
   const manifest = { app, version, tag: release.tag_name, build: 1, commit: "b".repeat(40),
     files: [{ name: filename, sha256: "a".repeat(64), size: 100 }] };
+  if (app === "mac") Object.assign(manifest, { signing: "ad-hoc", notarized: false });
   return { release, manifest };
 }
 
@@ -65,4 +66,20 @@ test("loads a valid release manifest and exposes its package", async () => {
   const result = await loadRelease("phone", async () => Response.json(calls++ === 0 ? release : manifest));
   assert.equal(result.available, true);
   assert.match(result.download, /phone-usage-1\.1\.1\.apk$/);
+});
+
+test("Mac signing status is explicit and consistent", () => {
+  for (const [signing, notarized] of [["ad-hoc", false], ["developer-id", true]]) {
+    const { release, manifest } = fixture("mac");
+    Object.assign(manifest, { signing, notarized });
+    const result = validateRelease("mac", release, manifest);
+    assert.equal(result.signing, signing);
+    assert.equal(result.notarized, notarized);
+  }
+  for (const [signing, notarized] of [[undefined, undefined], ["ad-hoc", true],
+    ["developer-id", false], ["ad-hoc", "false"], ["unknown", false]]) {
+    const { release, manifest } = fixture("mac");
+    Object.assign(manifest, { signing, notarized });
+    assert.equal(validateRelease("mac", release, manifest), null);
+  }
 });

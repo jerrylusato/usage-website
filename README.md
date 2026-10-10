@@ -40,6 +40,8 @@ A solo maintainer may merge their own verified PR. Website deployments need no m
 `GET /api/releases` queries public GitHub latest releases for the two app repositories,
 then validates the accompanying `release-manifest.json`: stable version/tag, positive build,
 source commit, expected package name, SHA-256 digest, size, and owned download URLs.
+Mac manifests must explicitly declare a consistent `signing` / `notarized` pair
+(`ad-hoc` / false or `developer-id` / true); missing or inconsistent status is rejected.
 Packages must include `SHA256SUMS`. GitHub's asset digest is checked when supplied.
 Metadata is cached for five minutes at the edge. The browser only queries this same-origin API.
 Source-build links remain visible until a valid published package is available, or if GitHub
@@ -47,8 +49,9 @@ is temporarily unavailable. No nonexistent binary download is advertised.
 
 Each app pipeline publishes immutable GitHub release assets; the website discovers newer
 releases without needing a new website deployment. Android downloads are signed APKs.
-Mac distribution is postponed while Apple membership is deferred; its source remains available.
-Future Mac downloads require Developer ID signed and notarized universal DMGs. Versions in source-only
+Mac downloads are universal ad-hoc signed DMGs, explicitly labeled as not notarized by
+Apple with manual approval instructions. Developer ID notarized releases remain supported
+and are labeled using validated manifest metadata. Versions in source-only
 fallback copy reflect the initial baselines: Android 1.1.1 (3), Mac 1.0.0 (1). Change these
 fallback values and the matching static HTML when the minimum supported source baseline changes.
 Drafts and prereleases do not become the stable download. Publish fixes as new versions;

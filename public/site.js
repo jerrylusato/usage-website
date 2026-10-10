@@ -25,7 +25,8 @@ async function updateDownloads() {
         link.textContent = app === "phone" ? "Download for Android ↓" : "Download for Mac ↓";
       });
       document.querySelectorAll(`[data-status="${app}"]`).forEach(element => {
-        element.textContent = app === "phone" ? "Signed APK · Android 8+" : "Signed & notarized · Apple Silicon + Intel · macOS 13+";
+        element.textContent = app === "phone" ? "Signed APK · Android 8+" : (release.notarized === true ? "Signed & notarized · Apple Silicon + Intel · macOS 13+"
+          : "Not notarized by Apple · Manual approval required · macOS 13+");
       });
       const detail = document.querySelector(`[data-release="${app}"]`);
       if (detail) {
