@@ -26,7 +26,7 @@ Workers Editor only for `usage-website`; user-owned tokens cannot use granular r
 CI uploads and deploys Worker versions without managing the existing custom domain.
 Domain changes remain a separate locally authenticated operation.
 
-The intended token expires on 2027-01-08; rotate it before expiry with the same narrow
+The intended token expires on 2027-01-09; rotate it before expiry with the same narrow
 permissions and verify a GitHub deployment before revoking the old token. Never commit
 tokens or Wrangler authentication files. PR checks cannot access deployment secrets.
 `main` requires a pull request and a successful `verify` check, including for administrators;
