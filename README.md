@@ -43,9 +43,12 @@ source commit, expected package name, SHA-256 digest, size, and owned download U
 Mac manifests must explicitly declare a consistent `signing` / `notarized` pair
 (`ad-hoc` / false or `developer-id` / true); missing or inconsistent status is rejected.
 Packages must include `SHA256SUMS`. GitHub's asset digest is checked when supplied.
-Metadata is cached for five minutes at the edge. The browser only queries this same-origin API.
-Source-build links remain visible until a valid published package is available, or if GitHub
-is temporarily unavailable. No nonexistent binary download is advertised.
+Metadata is cached for five minutes at the edge. The browser only queries this same-origin API
+and uses `cache: "no-store"` to bypass its own cache; Cloudflare zone browser TTL settings
+otherwise extend the response lifetime and can retain source links after publication.
+The static Mac button links to the verified published v1.0.0 baseline, so downloads remain
+available when JavaScript or metadata discovery is unavailable. Source links remain visible.
+The API upgrades the button to newer validated releases. No nonexistent binary is advertised.
 
 Each app pipeline publishes immutable GitHub release assets; the website discovers newer
 releases without needing a new website deployment. Android downloads are signed APKs.
