@@ -23,10 +23,12 @@ uses authenticated Wrangler. GitHub Actions verifies changes and deploys `main` 
 and the repository variable `CLOUDFLARE_DEPLOY_ENABLED=true`. Without that variable,
 CI verifies but skips deployment. The token must be account-owned and grant Individual
 Workers Editor only for `usage-website`; user-owned tokens cannot use granular roles.
-CI uploads and deploys Worker versions without managing the existing custom domain.
+CI records Wrangler’s structured upload output and deploys that exact version ID.
+Commit tags are metadata; repeated uploads of the same commit cannot make deployment
+ambiguous. CI leaves the existing custom domain in place.
 Domain changes remain a separate locally authenticated operation.
 
-The intended token expires on 2027-01-09; rotate it before expiry with the same narrow
+The production token expires on 2027-01-09 at 02:59:59 EAT; rotate it before expiry with the same narrow
 permissions and verify a GitHub deployment before revoking the old token. Never commit
 tokens or Wrangler authentication files. PR checks cannot access deployment secrets.
 `main` requires a pull request and a successful `verify` check, including for administrators;
