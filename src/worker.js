@@ -1,6 +1,6 @@
 const APPS = {
-  phone: { repository: "phone-usage-tracker", extension: "apk", version: "1.1.1", build: 3 },
-  mac: { repository: "mac-usage-tracker", extension: "dmg", version: "1.0.0", build: 1 },
+  phone: { repository: "phone-usage-tracker", version: "1.1.1", build: 3 },
+  mac: { repository: "mac-usage-tracker", version: "1.0.0", build: 1 },
 };
 const OWNER = "jerrylusato";
 const HEADERS = {
