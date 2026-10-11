@@ -52,6 +52,9 @@ The API upgrades the button to newer validated releases. No nonexistent binary i
 
 Each app pipeline publishes immutable GitHub release assets; the website discovers newer
 releases without needing a new website deployment. Android downloads are signed APKs.
+The website also documents the reusable `jerrylusato/tap` Homebrew cask installation and
+upgrade commands. Cask maintenance lives in `jerrylusato/homebrew-tap`, separate from
+the website and the app; the same first-launch approval requirement applies.
 Mac downloads are universal ad-hoc signed DMGs, explicitly labeled as not notarized by
 Apple with manual approval instructions. Developer ID notarized releases remain supported
 and are labeled using validated manifest metadata. Versions in source-only
